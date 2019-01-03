@@ -2,38 +2,66 @@
     <div class="add-contanier">
         <Card  class="add-content">
             <p slot="title">{{editType.message}}</p>
-            <div class="search-item" v-for="(item, index) in newData" :key="index">
-                <label for="">{{item.title}}：</label>
-                <i-input v-model="item.val" placeholder="请输入..." class="search-input"></i-input>
-            </div>
-            <div class="btn-group">
-                <Button  type="success"><Icon type="search"/>确定</Button>
-                <Button @click="$emit('addCancel');"  type="error"><Icon type="search"/>取消</Button>
-            </div>
+             <Form refs="addForm" :model="newData" label-position="left" :label-width="100" :rules="ruleValidate">
+                <FormItem  label = "姓名" prop='name'>
+                    <Input v-model="newData.name"></Input>
+                </FormItem>
+                <FormItem  label = "年龄" prop='age'>
+                    <Input v-model="newData.age"></Input>
+                </FormItem>
+                <FormItem  label = "地址" prop='address'>
+                    <Input v-model="newData.address"></Input>
+                </FormItem>
+                <FormItem label = '日期' prop='date'>
+                    <Date-picker v-model="newData.date" format="yyyy-MM-dd" type="date" placeholder="选择日期" class="search-input"></Date-picker>
+                </FormItem>
+                <FormItem class="btn-group">
+                    <Button  type="primary"  @click="handleSubmit"><Icon type="search"/>确定</Button>
+                    <Button @click="$emit('addCancel');"  type="error"><Icon type="search"/>取消</Button>
+                </FormItem>
+            </Form>
+          
+            
         </Card>
     </div>
 </template>
 <script>
 export default {
     props: ['editType'],
+    mounted(){
+        this.newData.date = new Date;
+    },
     data(){
         return{
-            newData:[
-                {
-                    title:'名字',
-                    key:'name',
-                    val:""
-                },{
-                    title:'年龄',
-                    key:'age',
-                    val:""
-                },{
-                    title:'地址',
-                    key:'address',
-                    val:""
+            newData:{
+                name:'',
+                age:'0',
+                address:'',
+                date:''
+            },
+            ruleValidate: {
+                    name: [
+                        { required: true, message: 'The name cannot be empty', trigger: 'blur' }
+                    ],
+                    age: [
+                        { required: true, message: 'age cannot be empty', trigger: 'blur' }
+                    ],
+                    address: [
+                        { required: true, message: 'address cannot be empty', trigger: 'blur' }
+                    ]
                 }
-            ]
         }
+    },
+    methods:{
+        handleSubmit () {
+                this.$refs.addForm.validate((valid) => {
+                    if (valid) {
+                        this.$Message.success('Success!');
+                    } else {
+                        this.$Message.error('Fail!');
+                    }
+                })
+            },
     }
 }
 </script>
