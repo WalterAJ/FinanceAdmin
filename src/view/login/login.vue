@@ -29,11 +29,16 @@ export default {
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
-        this.getUserInfo().then(res => {
-          this.$router.push({
-            name: this.$config.homeName
+        if(res.code == 0){
+          this.getUserInfo().then(res => {
+             this.$Message.success('登录成功！');
+              this.$router.push({
+                name: this.$config.homeName
+              })
           })
-        })
+        }else{
+          this.$Message.error(res.message);
+        }
       })
     }
   }

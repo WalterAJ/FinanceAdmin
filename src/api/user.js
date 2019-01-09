@@ -6,15 +6,18 @@ export const login = ({ userName, password }) => {
     password
   }
   return axios.request({
-    url: 'login',
-    data,
-    method: 'post'
+    url: '/api/users/login',
+    params: {
+      userName: data.userName,
+      password: data.password
+    },
+    method: 'get'
   })
 }
 
 export const getUserInfo = (token) => {
   return axios.request({
-    url: 'get_info',
+    url: '/api/users/getUserInfo',
     params: {
       token
     },

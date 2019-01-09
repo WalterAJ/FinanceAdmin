@@ -2,7 +2,7 @@
     <div class="add-contanier">
         <Card  class="add-content">
             <p slot="title">{{editType.message}}</p>
-             <Form refs="addForm" :model="newData" label-position="left" :label-width="100" :rules="ruleValidate">
+             <Form ref="addForm" :model="newData" label-position="left" :label-width="100" :rules="ruleValidate">
                 <FormItem  label = "姓名" prop='name'>
                     <Input v-model="newData.name"></Input>
                 </FormItem>
@@ -54,14 +54,19 @@ export default {
     },
     methods:{
         handleSubmit () {
-                this.$refs.addForm.validate((valid) => {
-                    if (valid) {
-                        this.$Message.success('Success!');
+            this.$refs.addForm.validate((valid) => {
+                if (valid) {
+                    if(this.editType.key == 'add'){
+                        this.$emit('addData',this.newData);
                     } else {
-                        this.$Message.error('Fail!');
+                        this.$emit('modifyData',this.newData);
                     }
-                })
-            },
+                    this.$Message.success('保存成功!');
+                } else {
+                    this.$Message.error('Fail!');
+                }
+            })
+        },
     }
 }
 </script>

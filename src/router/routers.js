@@ -32,7 +32,8 @@ export default [
     redirect: '/home',
     component: Main,
     meta: {
-      notCache: true
+      notCache: true,
+      auth:true
     },
     children: [
       {
@@ -47,21 +48,14 @@ export default [
       }
     ]
   },
-  {
-    path: '',
-    name: 'doc',
-    meta: {
-      title: '文档',
-      href: 'https://lison16.github.io/iview-admin-doc/#/',
-      icon: 'ios-book'
-    }
-  },
+ 
   {
     path: '/multilevel',
     name: 'multilevel',
     meta: {
       icon: 'md-menu',
-      title: '多级菜单'
+      title: '管理员操作',
+      access: ['super_admin'] 
     },
     component: Main,
     children: [

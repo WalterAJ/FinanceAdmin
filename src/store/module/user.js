@@ -40,9 +40,13 @@ export default {
           userName,
           password
         }).then(res => {
-          const data = res.data
-          commit('setToken', data.token)
-          resolve()
+          if(res.data.length != 0){
+            const data = res.data[0];
+            commit('setToken',data.userName);
+            resolve({code:0,message:'登录成功'})
+          } else{
+            resolve({code:1,message:'用户密码错误'})
+          }         
         }).catch(err => {
           reject(err)
         })
@@ -51,17 +55,17 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('setToken', '')
-          commit('setAccess', [])
-          resolve()
-        }).catch(err => {
-          reject(err)
-        })
+        // logout(state.token).then(() => {
+        //   commit('setToken', '')
+        //   commit('setAccess', [])
+        //   resolve()
+        // }).catch(err => {
+        //   reject(err)
+        // })
         // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
-        // commit('setToken', '')
-        // commit('setAccess', [])
-        // resolve()
+        commit('setToken', '')
+        commit('setAccess', [])
+        resolve()
       })
     },
     // 获取用户相关信息
@@ -69,13 +73,21 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAvator', data.avator)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
-            commit('setHasGetInfo', true)
-            resolve(data)
+            if(res.data.length != 0){
+              const data = res.data[0];
+              commit('setUserName', data.userName)
+              commit('setUserId', '1')
+              if(data.access == 'admin'){//判断用户权限
+                commit('setAccess', ['admin'],)//普通操作员
+              } else{
+                commit('setAccess', ['super_admin', 'admin'],)//超级管理员
+              }
+              commit('setHasGetInfo', true)
+              resolve(data)
+            } else{
+              console.log('fail!')
+            }
+            
           }).catch(err => {
             reject(err)
           })
